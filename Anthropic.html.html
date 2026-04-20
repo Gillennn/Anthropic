@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthropic — Monographie Numérique (2019–2026)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f2ede4;--cream2:#e8e2d7;--cream3:#ddd7cc;
+  --ink:#1c1a16;--ink2:#3d3a33;--ink3:#7a7468;
+  --forest:#2d3520;--moss:#4a5530;--sage:#8a9470;
+  --warm:#c8b99a;--border:rgba(28,26,22,0.12);
+  --ff-d:'Cormorant Garamond',Georgia,serif;
+  --ff-b:'Jost',sans-serif;
+  --ff-m:'IBM Plex Mono',monospace;
+  --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body{
+    background: #e5e0d5;
+    color:var(--ink);
+    font-family:var(--ff-b);
+    font-size:15px;
+    line-height:1.7;
+    font-weight:300;
+    padding: 2rem 1rem;
+}
+
+/* Filigrane et Texture */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 100;
+}
+
+#app{
+    max-width: 1200px;
+    margin: 0 auto;
+    background:var(--cream);
+    border-radius: 4px;
+    overflow:hidden;
+    box-shadow: 0 50px 100px -20px rgba(0,0,0,0.15), 0 30px 60px -30px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* ── NAV ── */
+#nav{
+    background:var(--cream);
+    border-bottom:1px solid var(--border);
+    padding:0 2.5rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    min-height:70px;
+    backdrop-filter: blur(10px);
+}
+.nav-wordmark{font-family:var(--ff-d);font-size:18px;font-weight:600;letter-spacing:.2em;color:var(--ink);text-transform:uppercase}
+.nav-wordmark span{font-size:10px;vertical-align:super;letter-spacing:0; color:var(--moss)}
+.nav-center{display:flex;flex-direction:column;align-items:center;}
+.nav-sub{font-family:var(--ff-m);font-size:9px;color:var(--ink3);letter-spacing:.15em;text-transform:uppercase}
+
+.nav-items{display:flex;gap:5px}
+.nav-btn{
+    background:none;
+    border:none;
+    padding:10px 15px;
+    font-family:var(--ff-m);
+    font-size:10px;
+    letter-spacing:.1em;
+    color:var(--ink3);
+    cursor:pointer;
+    text-transform:uppercase;
+    transition: var(--transition);
+    position: relative;
+}
+.nav-btn:hover{color:var(--forest)}
+.nav-btn.active{color:var(--forest);font-weight:500}
+.nav-btn.active::after{
+    content: "";
+    position: absolute;
+    bottom: 0; left: 15%; width: 70%; height: 2px;
+    background: var(--forest);
+}
+
+/* ── PAGES ── */
+.page{display:none; opacity:0; transform: translateY(10px);}
+.page.active{display:block; opacity:1; transform: translateY(0); transition: opacity 0.6s ease, transform 0.6s ease;}
+
+/* ── COMPOSANTS ── */
+.overline{font-family:var(--ff-m);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--moss);margin-bottom:1.5rem; display:flex; align-items:center; gap:1rem}
+.overline::after{content:""; height:1px; flex:1; background:var(--border)}
+.label-pill{display:inline-block;font-family:var(--ff-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--border);color:var(--ink3);border-radius:20px}
+.label-green{border-color:var(--moss);color:var(--moss); background: rgba(74,85,48,0.05)}
+
+/* ── HOME ── */
+.hero-shell{
+    padding: 5rem 4rem 4rem;
+    border-bottom:1px solid var(--border);
+    background: var(--cream);
+}
+.hero-h1{font-family:var(--ff-d);font-size:clamp(3rem, 7vw, 5rem);font-weight:300;line-height:1;letter-spacing:-.01em;color:var(--ink);margin-bottom:3rem}
+.hero-h1 em{font-style:italic;color:var(--forest); font-weight: 400}
+.hero-prob{max-width:700px;font-family:var(--ff-d);font-size:1.3rem;font-weight:300;font-style:italic;color:var(--ink2);line-height:1.6;padding-left:2rem;border-left:1px solid var(--warm); position: relative;}
+
+.home-body{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.hb-left{padding:4rem;border-right:1px solid var(--border); background: #fffcf9}
+.hb-right{padding:4rem; background: var(--cream2)}
+.hb-intro{font-family:var(--ff-d);font-size:1.15rem;font-weight:300;line-height:1.8;color:var(--ink2);margin-bottom:2rem}
+.hb-intro strong{font-weight:600;color:var(--forest)}
+.hb-image-container { display: flex; justify-content: center; margin-top: 3rem; }
+.hb-image-container img { max-width: 250px; object-fit: contain; mix-blend-mode: multiply; }
+
+.summary-stack{display:flex;flex-direction:column;gap:1rem}
+.ss-item{padding:2rem; background: var(--cream); border: 1px solid var(--border); transition: var(--transition)}
+.ss-item:hover{transform: translateX(10px); border-color: var(--warm)}
+.ss-num{font-family:var(--ff-d);font-size:3rem;font-weight:300;color:var(--warm);line-height:1;margin-bottom:1rem}
+.ss-label{font-family:var(--ff-m);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--moss);margin-bottom:.5rem}
+.ss-text{font-size:.95rem;color:var(--ink3);line-height:1.6}
+
+/* ── HISTORY ── */
+.hist-header{padding:4rem 4rem 3rem;border-bottom:1px solid var(--border)}
+.phase-wrap{display:grid;grid-template-columns:250px 1fr;min-height:650px}
+.phase-sidebar{padding:3rem 0 3rem 4rem;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:10px}
+.ps-item{padding:1.5rem; border-radius: 4px 0 0 4px; cursor:pointer; transition: var(--transition)}
+.ps-item:hover{background: rgba(0,0,0,0.03)}
+.ps-item.active{background: var(--cream); border: 1px solid var(--border); border-right-color: transparent; width: calc(100% + 1px); z-index: 10;}
+.ps-year{font-family:var(--ff-m);font-size:10px;color:var(--moss);margin-bottom:.5rem}
+.ps-title{font-family:var(--ff-d);font-size:1.1rem;font-weight:600;color:var(--ink)}
+
+.phase-content{padding:5rem; position: relative; background: white;}
+.pc-block{display:none; animation: fadeIn 0.8s ease forwards;}
+.pc-block.active{display:block}
+.pc-number{font-family:var(--ff-d);font-size:10rem;font-weight:300;color:rgba(28,26,22,0.03);line-height:1;position:absolute; top: 2rem; right: 4rem; pointer-events:none}
+.pc-title{font-family:var(--ff-d);font-size:3rem;font-weight:400;color:var(--ink);margin-bottom:2.5rem; position: relative;}
+.pc-body p{font-family:var(--ff-d);font-size:1.1rem;font-weight:300;color:var(--ink2);line-height:1.8;margin-bottom:1.5rem}
+.pc-pull{font-family:var(--ff-d);font-size:1.5rem;font-style:italic;font-weight:300;color:var(--forest);line-height:1.5;padding:2.5rem 0;margin:3rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border); position: relative}
+.pc-pull cite{font-family:var(--ff-m);font-size:9px;display:block;color:var(--ink3);font-style:normal;margin-top:1rem;letter-spacing:.1em}
+
+/* ── ACTORS ── */
+.actors-header{padding:4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end; background: #fff}
+.actors-list{display:flex;flex-direction:column}
+.acard{border-bottom:1px solid var(--border); transition: var(--transition); background: var(--cream); cursor: pointer;}
+.acard-main{padding:3rem 4rem;display:grid;grid-template-columns:120px 1fr auto;gap:3rem;align-items:start}
+.ac-img-frame{width:120px; height:120px; border-radius: 4px; overflow:hidden; border:1px solid var(--border); filter: grayscale(100%); transition: var(--transition); background: white; display: flex; align-items: center; justify-content: center;}
+.acard:hover .ac-img-frame{filter: grayscale(0); transform: scale(1.05)}
+.ac-img-frame img{width:100%; height:100%; object-fit:cover}
+.ac-img-frame img.contain { object-fit: contain; padding: 10px; } /* Utile pour les logos */
+
+.ac-name{font-family:var(--ff-d);font-size:2rem;font-weight:500;color:var(--ink);line-height:1.1;margin-bottom:.5rem}
+.ac-sub{font-family:var(--ff-m);font-size:10px;color:var(--moss);text-transform:uppercase;letter-spacing:1px; margin-bottom: 1rem; display:block}
+.ac-bio{font-family:var(--ff-d);font-size:1.1rem;font-weight:300;color:var(--ink2);max-width:700px}
+.ac-toggle{background:none; border: 1px solid var(--border); padding: 8px 20px; font-family:var(--ff-m); font-size:9px; cursor:pointer; text-transform:uppercase; transition: var(--transition); margin-top: 5px; pointer-events: none;}
+.acard:hover .ac-toggle{background: var(--ink); color: white}
+
+/* MODIFICATION ICI : ajustement du max-height et du padding pour ne plus cacher le texte */
+.ac-extra{max-height:0;overflow:hidden;transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1); background: rgba(0,0,0,0.02)}
+.acard.open .ac-extra{max-height:800px}
+.ac-extra-inner{padding: 1rem 4rem 4rem; display:grid; grid-template-columns: 1fr 1fr; gap:3rem;}
+.ac-quote{font-family:var(--ff-d);font-size:1.1rem;font-style:italic;color:var(--forest);line-height:1.7;padding-left:2rem;border-left:2px solid var(--warm)}
+.ac-detail{font-family:var(--ff-d);font-size:1rem;color:var(--ink3);line-height:1.8}
+
+/* ── PRODUCTS ── */
+.pitem{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--border); background: white}
+.pi-left{padding:4rem; border-right:1px solid var(--border); display:flex; flex-direction:column; justify-content:center; background: #fafafa}
+.pi-date{font-family:var(--ff-d);font-size:1.6rem;font-weight:300;color:var(--warm);line-height:1.2; margin-bottom: .5rem;}
+.pi-right{padding:4rem}
+.pi-badges{margin-bottom: 1rem; display: flex; gap: 10px;}
+.pi-title{font-family:var(--ff-d);font-size:2.2rem;font-weight:500;margin-bottom:1.5rem; letter-spacing:-0.01em}
+.pi-body{font-family:var(--ff-d);font-size:1.05rem;font-weight:300;color:var(--ink2);line-height:1.75}
+.pi-benches{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1.5rem}
+.bench{background: var(--cream); border: 1px solid var(--border); padding: 5px 12px; font-family:var(--ff-m); font-size:9px; border-radius:2px; color: var(--moss)}
+
+/* ── FRISE ── */
+.frise-header{padding:4rem 4rem 0; background: white}
+.tl-container{padding: 2rem 4rem 4rem; background: white; border-bottom: 1px solid var(--border)}
+.tl-scroll{overflow-x:auto; padding-bottom: 2rem; display:flex; gap: 0; scrollbar-width: thin; scrollbar-color: var(--warm) transparent;}
+.tl-node{min-width:180px; flex:1; padding:2rem 1rem; border-top: 2px solid var(--border); cursor:pointer; transition: var(--transition); position: relative; text-align: center;}
+.tl-node::before{content:""; position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:12px; height:12px; background:var(--border); border-radius:50%; transition: var(--transition)}
+.tl-node:hover, .tl-node.active{border-top-color: var(--forest); background: rgba(0,0,0,0.01)}
+.tl-node.active::before{background: var(--forest); transform: translateX(-50%) scale(1.5)}
+.tl-yr{font-family:var(--ff-m); font-size:10px; color:var(--moss); margin-bottom:1rem; letter-spacing: .1em;}
+.tl-lbl{font-family:var(--ff-d); font-size:1.1rem; font-weight:600; color:var(--ink2); line-height:1.3}
+
+.tl-panel{margin: 0 4rem 4rem; padding:4rem; background: var(--cream); border:1px solid var(--border); display:none; animation: fadeIn 0.5s ease;}
+.tl-panel.vis{display:block}
+.tl-p-over{font-family:var(--ff-m); font-size:10px; color:var(--warm); margin-bottom:1rem; letter-spacing:2px; text-transform: uppercase;}
+.tl-p-title{font-family:var(--ff-d); font-size:2.5rem; margin-bottom:2rem}
+.tl-p-body{font-family:var(--ff-d); font-size:1.2rem; font-weight:300; line-height:1.8; color:var(--ink2)}
+.tl-p-src{margin-top:2rem; padding-top:1.5rem; border-top: 1px solid var(--border); font-family:var(--ff-m); font-size:9px; color:var(--ink3); letter-spacing: .05em;}
+
+/* ── BIBLIO ── */
+.bib-header{padding:4rem; background: #fffcf9; border-bottom:1px solid var(--border)}
+.bib-section{padding: 0 4rem; background: white}
+.bib-cat-header{padding:3rem 0 1.5rem; display:flex; align-items:center; gap:1.5rem}
+.bib-cat-header span{font-family:var(--ff-m); font-size:10px; letter-spacing:3px; color:var(--moss); text-transform:uppercase}
+.bib-cat-header::after{content:""; height:1px; flex:1; background:var(--border)}
+.bib-item{padding:1.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); display:grid; grid-template-columns: 50px 1fr; align-items:start}
+.bib-n{font-family:var(--IBM Plex Mono); font-size:11px; color:var(--warm)}
+.bib-t{font-family:var(--ff-d); font-size:1.05rem; line-height:1.7}
+.bib-aut{font-weight:600; color:var(--ink)}
+.bib-title{font-style:italic}
+.bib-journal{display:block; font-family:var(--ff-m); font-size:9px; color:var(--ink3); margin-top:5px; text-transform:uppercase; letter-spacing:1px}
+
+@keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+
+@media(max-width:900px){
+    .home-body, .phase-wrap, .acard-main, .pitem, .ac-extra-inner{grid-template-columns: 1fr}
+    .phase-sidebar{flex-direction:row; padding:1rem; border-right:none; border-bottom:1px solid var(--border); overflow-x:auto}
+    .ps-item{min-width:150px; border-radius:0; border:none}
+    .ps-item.active{width:auto; border-bottom:2px solid var(--forest)}
+    .nav-items{display:none}
+    .hb-left, .hb-right, .phase-content, .acard-main, .pi-right, .tl-panel{padding:2rem}
+    .ac-img-frame{margin-bottom: 1rem;}
+}
+    </style>
+</head>
+<body>
+
+<div id="app">
+
+<nav id="nav">
+  <div class="nav-wordmark">Anthropic<span>®</span></div>
+  <div class="nav-center">
+    <span class="nav-sub">Monographie — 2019–2026</span>
+  </div>
+  <div class="nav-items">
+    <button class="nav-btn active" onclick="show('home',this)">Accueil</button>
+    <button class="nav-btn" onclick="show('history',this)">Histoire</button>
+    <button class="nav-btn" onclick="show('actors',this)">Acteurs</button>
+    <button class="nav-btn" onclick="show('products',this)">Produits</button>
+    <button class="nav-btn" onclick="show('frise',this)">Frise</button>
+    <button class="nav-btn" onclick="show('biblio',this)">Bibliographie</button>
+  </div>
+</nav>
+
+<div id="home" class="page active">
+  <header class="hero-shell">
+    <div class="overline">Monographie numérique &mdash; 2019–2026</div>
+    <div style="margin-bottom: 2rem;">
+        <img src="https://sm.pcmag.com/t/pcmag_au/review/c/claude/claude_ene5.1200.jpg" alt="Claude Logo" style="height: 60px; object-fit: contain;">
+    </div>
+    <h1 class="hero-h1">De la <em>dissidence éthique</em><br>à l'intégration industrielle</h1>
+    <p class="hero-prob">« Comment la quête de l'alignement de l'IA retrace-t-elle les tensions entre idéalisme académique, impératifs énergétiques et verticalisation du marché numérique ? »<sup>[32]</sup></p>
+  </header>
+
+  <div class="home-body">
+    <section class="hb-left">
+      <div class="overline">Résumé exécutif</div>
+      <p class="hb-intro">Fondée en 2021 à la suite d'une rupture significative avec OpenAI, Anthropic incarne une tentative singulière de conjuguer rigueur académique et réalité commerciale d'un secteur en hyper-accélération. L'entreprise réunit onze ex-chercheurs — dont Dario et Daniela Amodei — autour d'une conviction commune : le développement de systèmes d'IA de grande puissance ne peut pas être délégué à des entités exclusivement orientées vers la croissance.<sup>[6]</sup> Ce site retrace <strong>cinq ans de tensions fondatrices</strong>.</p>
+      
+      <div class="hb-image-container">
+        <img src="https://sm.pcmag.com/t/pcmag_au/review/c/claude/claude_ene5.1200.jpg" alt="Anthropic Spark">
+      </div>
+    </section>
+    
+    <aside class="hb-right">
+      <div class="summary-stack">
+        <div class="ss-item">
+          <div class="ss-num">01</div>
+          <div class="ss-label">Le Schisme — 2021</div>
+          <div class="ss-text">Désaccord sur la vitesse de déploiement et le partenariat Microsoft.<sup>[9]</sup> Une <strong>fracture épistémique</strong> sur la nature du risque en IA.</div>
+        </div>
+        <div class="ss-item">
+          <div class="ss-num">02</div>
+          <div class="ss-label">IA Constitutionnelle</div>
+          <div class="ss-text">Publication de <em>Constitutional AI</em><sup>[14]</sup> : mécanisme d'auto-correction par principes éthiques, <strong>alternatif au RLHF</strong>.</div>
+        </div>
+        <div class="ss-item">
+          <div class="ss-num">03</div>
+          <div class="ss-label">Intégration industrielle</div>
+          <div class="ss-text">Amazon investit <strong>8 milliards $</strong><sup>[21]</sup>. Data centers dans le Golfe. Nouvelles dépendances géopolitiques.<sup>[58-60]</sup></div>
+        </div>
+        <div class="ss-item">
+          <div class="ss-num">04</div>
+          <div class="ss-label">Claude — Vitrine technique</div>
+          <div class="ss-text">De Claude 1.0 à Claude 4.6, benchmarks MMLU &amp; GPQA en <strong>compétition directe</strong> avec GPT-4 et Gemini.<sup>[54, 55]</sup></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="home-footer" style="padding:4rem; background: var(--cream3); display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 1rem;">
+    <p style="font-family:var(--ff-m); font-size:10px; color:var(--ink2); max-width:600px; line-height: 1.6;">Ce site est structuré en cinq sections thématiques : <strong>Histoire</strong> en trois phases (2019–2026), <strong>Acteurs</strong> fondateurs et investisseurs, <strong>Produits</strong> (évolution de Claude), <strong>Frise</strong> chronologique interactive, et <strong>Bibliographie</strong> académique complète. Chaque affirmation est référencée.<sup>[65]</sup></p>
+    <span class="label-pill label-green">Monographie académique</span>
+  </footer>
+</div>
+
+<div id="history" class="page">
+  <div class="hist-header">
+    <div class="overline">Développement historique</div>
+    <h2>L'histoire en trois phases</h2>
+  </div>
+  <div class="phase-wrap">
+    <nav class="phase-sidebar" id="phase-sidebar">
+      <div class="ps-item active" onclick="setPhase(0,this)">
+        <div class="ps-year">2019 – 2021</div>
+        <div class="ps-title">Le Schisme</div>
+      </div>
+      <div class="ps-item" onclick="setPhase(1,this)">
+        <div class="ps-year">2021 – 2023</div>
+        <div class="ps-title">L'IA Constitutionnelle</div>
+      </div>
+      <div class="ps-item" onclick="setPhase(2,this)">
+        <div class="ps-year">2023 – 2026</div>
+        <div class="ps-title">La Verticalisation</div>
+      </div>
+    </nav>
+    <article class="phase-content">
+      <div class="pc-block active" id="ph0">
+        <div class="pc-number">01</div>
+        <h3 class="pc-title">Le Schisme</h3>
+        <div class="pc-body">
+          <p>Entre 2019 et 2021, OpenAI opère une transformation profonde. Le passage d'une structure à but non lucratif vers un modèle <em>capped-profit</em> et l'entrée de Microsoft au capital pour un milliard de dollars<sup>[9]</sup> déplacent le centre de gravité vers la commercialisation rapide. Plusieurs chercheurs perçoivent cette évolution comme une menace sur les missions de sécurité.<sup>[34]</sup></p>
+          <p>Dario Amodei, alors vice-président de la recherche, est convaincu que les systèmes d'IA de grande capacité présentent des risques existentiels sous-estimés. Avec neuf co-fondateurs dont sa sœur Daniela, il quitte OpenAI pour fonder Anthropic en 2021, refusant les compromis d'une intégration aussi étroite avec un opérateur de cloud.<sup>[93-96]</sup></p>
+          <div class="pc-pull">« Nous avons quitté non pas pour des raisons personnelles, mais parce que nous pensions qu'il fallait construire autrement. »<cite>[source orale, 2022]</cite></div>
+          <p>Ce départ constitue moins une rupture individuelle qu'un symptôme d'une fracture épistémique : faut-il accélérer le déploiement pour capturer la valeur commerciale, ou ralentir pour évaluer les risques à long terme ?</p>
+        </div>
+      </div>
+      <div class="pc-block" id="ph1">
+        <div class="pc-number">02</div>
+        <h3 class="pc-title">L'IA Constitutionnelle</h3>
+        <div class="pc-body">
+          <p>La première contribution intellectuelle majeure d'Anthropic est publiée en décembre 2022 : <em>Constitutional AI: Harmlessness from AI Feedback</em><sup>[14]</sup>, cosigné par Yuntao Bai et al. Il décrit une méthode d'alignement radicalement différente du RLHF dominant à l'époque.</p>
+          <p>Le principe : on dote le modèle d'un ensemble de principes constitutionnels — une liste de règles éthiques et sociales — et on le force à critiquer ses propres réponses selon ces principes avant de les réviser.<sup>[15-17]</sup> Le résultat, baptisé Claude, se distingue par une architecture d'auto-correction itérative.</p>
+          <p>Cette période voit également le travail fondateur de Chris Olah sur l'interprétabilité mécanistique, visant à rendre les boîtes noires du deep learning partiellement transparentes.<sup>[51, 101-104]</sup></p>
+          <div class="pc-pull">« L'IA constitutionnelle n'est pas une contrainte imposée de l'extérieur : c'est la capacité du modèle à raisonner sur sa propre conduite. »<cite>[Bai et al., 2022]</cite></div>
+        </div>
+      </div>
+      <div class="pc-block" id="ph2">
+        <div class="pc-number">03</div>
+        <h3 class="pc-title">La Verticalisation Industrielle</h3>
+        <div class="pc-body">
+          <p>Le lancement public de Claude 1.0 en mars 2023 marque l'entrée d'Anthropic dans l'arène commerciale. L'automne 2023 représente un tournant : Amazon annonce un investissement de 4 milliards de dollars,<sup>[21]</sup> suivi d'un second engagement identique, faisant d'AWS le partenaire cloud stratégique d'Anthropic.</p>
+          <p>Cette intégration place Anthropic dans une relation de dépendance partielle vis-à-vis d'une infrastructure industrielle, soulevant des questions sur l'indépendance réelle de sa mission de sécurité.<sup>[36]</sup> Des projets de data centers aux Émirats Arabes Unis<sup>[58-59]</sup> illustrent comment la quête de l'alignement génère, paradoxalement, de nouvelles dépendances géopolitiques et environnementales.<sup>[60]</sup></p>
+          <p>En parallèle, la famille Claude s'élargit rapidement. L'entreprise lève en 2024 un total de 7,3 milliards de dollars, valorisant la société à 18 milliards.<sup>[108-111]</sup></p>
+          <div class="pc-pull">« L'idéalisme de la sécurité et l'impératif du compute ne sont pas contradictoires — ils définissent la nouvelle frontière de l'IA industrielle. »</div>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<div id="actors" class="page">
+  <header class="actors-header">
+    <div>
+      <div class="overline">Les visages</div>
+      <h2>La dissidence incarnée</h2>
+    </div>
+    <p style="font-family:var(--ff-m); font-size:9px; color:var(--ink3); letter-spacing:.08em;">Cliquez pour développer le parcours.</p>
+  </header>
+  <div class="actors-list">
+    <div class="acard" onclick="toggleActor(this)">
+      <div class="acard-main">
+        <div class="ac-img-frame">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Dario_Amodei_at_TechCrunch_Disrupt_2023_01_%28cropped%29.jpg/500px-Dario_Amodei_at_TechCrunch_Disrupt_2023_01_%28cropped%29.jpg" alt="Dario Amodei">
+        </div>
+        <div class="ac-body">
+          <span class="ac-sub">Ex-VP Research, OpenAI</span>
+          <h3 class="ac-name">Dario Amodei</h3>
+          <span style="font-family:var(--ff-m);font-size:9px;color:var(--moss);text-transform:uppercase;margin-bottom:.4rem;display:block;">Co-fondateur & CEO</span>
+          <p class="ac-bio">Physicien de formation (Princeton, PhD Stanford), Dario Amodei a dirigé la recherche sur GPT-2 et GPT-3 avant de quitter OpenAI en 2021.<sup>[50]</sup></p>
+        </div>
+        <button class="ac-toggle">Parcours ↓</button>
+      </div>
+      <div class="ac-extra">
+        <div class="ac-extra-inner">
+          <div class="ac-quote">« La sécurité n'est pas une contrainte sur l'ambition — c'est la condition de sa réalisation. »</div>
+          <p class="ac-detail">Après son doctorat en biophysique computationnelle, Amodei rejoint Baidu Research puis OpenAI en 2016. Il supervise l'entraînement de GPT-2 et la publication controversée de GPT-3. Son désaccord porte sur la vitesse de déploiement et les modalités du partenariat Microsoft. En 2024, classé parmi les 100 personnalités les plus influentes du monde par <em>Time</em>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="acard" onclick="toggleActor(this)">
+      <div class="acard-main">
+        <div class="ac-img-frame">
+          <img src="https://imageio.forbes.com/specials-images/imageserve/67e5a908b892f00cb44e6a12/0x0.jpg?format=jpg&crop=1473,1473,x60,y78,safe&height=416&width=416&fit=bounds" alt="Daniela Amodei">
+        </div>
+        <div class="ac-body">
+          <span class="ac-sub">Ex-VP Operations, OpenAI</span>
+          <h3 class="ac-name">Daniela Amodei</h3>
+          <span style="font-family:var(--ff-m);font-size:9px;color:var(--moss);text-transform:uppercase;margin-bottom:.4rem;display:block;">Co-fondatrice & Présidente</span>
+          <p class="ac-bio">Figure organisationnelle centrale, Daniela dirige les opérations, les ressources humaines et la strategy de croissance d'Anthropic.<sup>[50]</sup></p>
+        </div>
+        <button class="ac-toggle">Parcours ↓</button>
+      </div>
+      <div class="ac-extra">
+        <div class="ac-extra-inner">
+          <div class="ac-quote">« Construire une organisation alignée sur la sécurité, c'est aussi un problème de culture d'entreprise. »</div>
+          <p class="ac-detail">Diplômée de Dartmouth, Daniela a travaillé chez Stripe avant de rejoindre OpenAI comme VP Operations. Chez Anthropic, elle supervise la croissance de l'entreprise, en construisant une culture organisationnelle compatible avec la mission de sécurité.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="acard" onclick="toggleActor(this)">
+      <div class="acard-main">
+        <div class="ac-img-frame">
+          <img src="https://pbs.twimg.com/profile_images/1422800200146378753/TdaSuRIB_400x400.jpg" alt="Chris Olah">
+        </div>
+        <div class="ac-body">
+          <span class="ac-sub">Pionnier de l'interprétabilité mécanistique</span>
+          <h3 class="ac-name">Chris Olah</h3>
+          <span style="font-family:var(--ff-m);font-size:9px;color:var(--moss);text-transform:uppercase;margin-bottom:.4rem;display:block;">Chercheur principal — Interprétabilité</span>
+          <p class="ac-bio">Créateur de <em>Distill.pub</em> et de travaux fondateurs sur la visualisation des réseaux de neurones.<sup>[51]</sup></p>
+        </div>
+        <button class="ac-toggle">Parcours ↓</button>
+      </div>
+      <div class="ac-extra">
+        <div class="ac-extra-inner">
+          <div class="ac-quote">« Comprendre les circuits d'un réseau de neurones, c'est traduire une langue que nous avons créée mais que nous ne comprenons pas encore. »</div>
+          <p class="ac-detail">Autodidacte en deep learning, Olah a travaillé chez Google Brain puis OpenAI avant de rejoindre Anthropic. Ses travaux sur les <em>feature visualizations</em> et les <em>circuits</em> constituent un socle méthodologique pour la sécurité de l'IA.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="acard" onclick="toggleActor(this)">
+      <div class="acard-main">
+        <div class="ac-img-frame" style="border: 2px solid green;"> <img src="https://i.insider.com/68a5d124194a2d49b8aed7e4?width=700" alt="Tom Brown Placeholder" class="contain">
+        </div>
+        <div class="ac-body">
+          <span class="ac-sub">Co-auteur de GPT-3</span>
+          <h3 class="ac-name">Tom Brown</h3>
+          <span style="font-family:var(--ff-m);font-size:9px;color:var(--moss);text-transform:uppercase;margin-bottom:.4rem;display:block;">Architecte technique</span>
+          <p class="ac-bio">Auteur principal du papier fondateur GPT-3 (2020)<sup>[51]</sup>, il apporte une expertise rare en architecture de grands modèles de langage.</p>
+        </div>
+        <button class="ac-toggle">Parcours ↓</button>
+      </div>
+      <div class="ac-extra">
+        <div class="ac-extra-inner">
+          <div class="ac-quote">« L'échelle n'est pas une fin en soi : c'est un outil dont il faut comprendre les effets de bord. »</div>
+          <p class="ac-detail">Chercheur en deep learning, Brown est l'un des architectes des modèles GPT chez OpenAI. Son expertise en scaling et en architecture transformers est déterminante dans le développement de la famille Claude.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="acard" onclick="toggleActor(this)">
+      <div class="acard-main">
+        <div class="ac-img-frame">
+          <img src="https://media.ouest-france.fr/v1/pictures/MjAyMDEwOGIwYmNkOTY5YWU4NTQxMDI2NDM3MzEyN2I0NGQ0MGU?width=1260&height=708&focuspoint=50%2C25&cropresize=1&client_id=bpeditorial&sign=5bc430f3e7c1388abeed23e6b705b52a37684e552747414b159f40a248626e96" alt="Amazon" class="contain">
+        </div>
+        <div class="ac-body">
+          <span class="ac-sub">8 milliards $ — Pivot industriel</span>
+          <h3 class="ac-name">Amazon / Jeff Bezos</h3>
+          <span style="font-family:var(--ff-m);font-size:9px;color:var(--moss);text-transform:uppercase;margin-bottom:.4rem;display:block;">Investisseur stratégique</span>
+          <p class="ac-bio">En 2023, Amazon annonce un engagement de 4 milliards<sup>[58-59]</sup>, portant son investissement total à 8 milliards en 2024. Le pivot industriel d'Anthropic.</p>
+        </div>
+        <button class="ac-toggle">Détails ↓</button>
+      </div>
+      <div class="ac-extra">
+        <div class="ac-extra-inner">
+          <div class="ac-quote">« L'investissement dans Anthropic est stratégique pour positionner AWS comme partenaire cloud de référence de l'ère de l'IA générative. »</div>
+          <p class="ac-detail">L'accord prévoit qu'Anthropic utilise AWS comme fournisseur cloud principal avec les puces Trainium et Inferentia d'Amazon. Cette relation soulève des questions sur l'indépendance d'Anthropic, en miroir du partenariat OpenAI–Microsoft.<sup>[21, 36]</sup></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="products" class="page">
+  <div class="prod-header" style="padding:4rem; border-bottom:1px solid var(--border)">
+    <div class="overline">Chronologie technique</div>
+    <h2>L'évolution de Claude</h2>
+  </div>
+  <div class="prod-list">
+    <div class="pitem" style="background: rgba(28,26,22,0.02)">
+      <div class="pi-left"><div class="pi-date">Mars<br>2023</div></div>
+      <div class="pi-right">
+        <div class="pi-badges"><span class="label-pill label-green">Version publique</span></div>
+        <h3 class="pi-title">Claude 1.0</h3>
+        <p class="pi-body">Première version publique d'Anthropic, construite sur les principes de l'IA constitutionnelle.<sup>[54]</sup> Le modèle est entraîné à refuser les demandes nuisibles sans règles post-hoc, grâce à l'auto-critique itérative. Fenêtre de contexte : 9 000 tokens.</p>
+      </div>
+    </div>
+
+    <div class="pitem">
+      <div class="pi-left"><div class="pi-date">Juil.<br>2023</div></div>
+      <div class="pi-right">
+        <div class="pi-badges"><span class="label-pill">Maj. majeure</span></div>
+        <h3 class="pi-title">Claude 2</h3>
+        <p class="pi-body">Fenêtre de contexte portée à 100 000 tokens — un record à l'époque.<sup>[54]</sup> Meilleures capacités de raisonnement et de codage. Lancement simultané de l'interface web claude.ai.</p>
+        <div class="pi-benches"><span class="bench">Codex HumanEval +15%</span><span class="bench">Contexte ×10</span></div>
+      </div>
+    </div>
+
+    <div class="pitem" style="background: rgba(28,26,22,0.02)">
+      <div class="pi-left"><div class="pi-date">Mars<br>2024</div></div>
+      <div class="pi-right">
+        <div class="pi-badges"><span class="label-pill label-green">Famille</span></div>
+        <h3 class="pi-title">Claude 3 — Haiku · Sonnet · Opus</h3>
+        <p class="pi-body">Stratégie de différenciation par tier de performance.<sup>[54]</sup> Opus surpasse GPT-4 Turbo sur MMLU (86,8 %) et GPQA (50,4 %), positionnant Anthropic comme concurrent direct de frontier AI.<sup>[55]</sup></p>
+        <div class="pi-benches"><span class="bench">MMLU 86.8%</span><span class="bench">GPQA 50.4%</span><span class="bench">HumanEval 84.9%</span><span class="bench">MATH 60.1%</span></div>
+      </div>
+    </div>
+
+    <div class="pitem">
+      <div class="pi-left"><div class="pi-date">Juin<br>2024</div></div>
+      <div class="pi-right">
+        <div class="pi-badges"><span class="label-pill">Itération</span></div>
+        <h3 class="pi-title">Claude 3.5 Sonnet</h3>
+        <p class="pi-body">Raisonnement multi-étapes et code complexe améliorés.<sup>[54]</sup> Surpasse Opus sur plusieurs benchmarks à moindre coût. Introduction des <em>Artifacts</em> : génération de composants interactifs directement dans l'interface.</p>
+      </div>
+    </div>
+
+    <div class="pitem" style="background: rgba(28,26,22,0.02)">
+      <div class="pi-left"><div class="pi-date">2025<br>2026</div></div>
+      <div class="pi-right">
+        <div class="pi-badges"><span class="label-pill label-green">Agentique</span></div>
+        <h3 class="pi-title">Claude 3.7 &amp; Claude 4.6</h3>
+        <p class="pi-body"><em>Adaptive thinking</em> : allocation dynamique du budget computationnel selon la complexité de la tâche. Claude 3.7 (février 2025) introduit le mode hybride réflexif/direct. Claude 4.6 ancre Anthropic dans l'ère agentique : outils, memory management et pipelines multi-agents comme capacités natives.</p>
+        <div class="pi-benches"><span class="bench">SWE-bench +38%</span><span class="bench">Thinking étendu</span><span class="bench">Intégration MCP</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="frise" class="page">
+  <div class="frise-header">
+    <div class="overline">Jalons fondateurs</div>
+    <h2>Frise chronologique</h2>
+  </div>
+  <div class="tl-container">
+    <div class="tl-scroll" id="tl-scroll-area">
+      </div>
+  </div>
+  <div class="tl-panel" id="tl-panel">
+    <div class="tl-p-over" id="tl-over"></div>
+    <h3 class="tl-p-title" id="tl-title"></h3>
+    <div class="tl-p-body" id="tl-body"></div>
+    <div class="tl-p-src" id="tl-src"></div>
+  </div>
+</div>
+
+<div id="biblio" class="page">
+  <div class="bib-header">
+    <div class="overline">Appareil critique</div>
+    <h2>Sources &amp; Références</h2>
+  </div>
+  <div class="bib-section">
+    <div class="bib-cat-header"><span>I. Articles scientifiques</span></div>
+    <div class="bib-item"><span class="bib-n">[1]</span><div class="bib-t"><span class="bib-aut">Bai, Y., Jones, A., Ndousse, K. et al.</span> (2022). <span class="bib-title">Constitutional AI: Harmlessness from AI Feedback.</span><span class="bib-journal">arXiv:2212.08073 — Anthropic Technical Report.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[2]</span><div class="bib-t"><span class="bib-aut">Brown, T., Mann, B., Ryder, N. et al.</span> (2020). <span class="bib-title">Language Models are Few-Shot Learners (GPT-3).</span><span class="bib-journal">NeurIPS 2020 — arXiv:2005.14165.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[3]</span><div class="bib-t"><span class="bib-aut">Olah, C., Cammarata, N., Schubert, L. et al.</span> (2020). <span class="bib-title">Zoom In: An Introduction to Circuits.</span><span class="bib-journal">Distill — doi:10.23915/distill.00024.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[4]</span><div class="bib-t"><span class="bib-aut">Anthropic Research Team</span> (2024). <span class="bib-title">Claude 3 Model Card.</span><span class="bib-journal">Anthropic Technical Documentation.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[5]</span><div class="bib-t"><span class="bib-aut">Askell, A., Bai, Y., Chen, A. et al.</span> (2021). <span class="bib-title">A General Language Assistant as a Laboratory for Alignment.</span><span class="bib-journal">arXiv:2112.00861.</span></div></div>
+    
+    <div class="bib-cat-header"><span>II. Revues professionnelles &amp; Presse</span></div>
+    <div class="bib-item"><span class="bib-n">[6]</span><div class="bib-t"><span class="bib-aut">Metz, C.</span> (2023). <span class="bib-title">The AI Cold War That Threatens Us All.</span><span class="bib-journal">The New York Times — 9 décembre 2023.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[7]</span><div class="bib-t"><span class="bib-aut">Heaven, W. D.</span> (2023). <span class="bib-title">Anthropic's Claude is making the case for constitutional AI.</span><span class="bib-journal">MIT Technology Review — 7 mars 2023.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[8]</span><div class="bib-t"><span class="bib-aut">Labbé, C., Confavreux, J.</span> (2024). <span class="bib-title">IA : le capitalisme de surveillance entre dans sa phase industrielle.</span><span class="bib-journal">Le Monde Diplomatique — mars 2024.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[9]</span><div class="bib-t"><span class="bib-aut">Knight, W.</span> (2023). <span class="bib-title">Amazon Is Investing Up to $4 Billion in AI Startup Anthropic.</span><span class="bib-journal">Wired — 25 septembre 2023.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[10]</span><div class="bib-t"><span class="bib-aut">Vallance, C.</span> (2025). <span class="bib-title">Anthropic plans major AI hub in Abu Dhabi and Gulf expansion.</span><span class="bib-journal">BBC Technology — janvier 2025.</span></div></div>
+
+    <div class="bib-cat-header"><span>III. Sites Internet, rapports &amp; podcasts</span></div>
+    <div class="bib-item"><span class="bib-n">[11]</span><div class="bib-t"><span class="bib-aut">Anthropic</span>. <span class="bib-title">Claude Model Hub — Technical Documentation.</span><span class="bib-journal">anthropic.com/claude — consulté 2024–2026.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[12]</span><div class="bib-t"><span class="bib-aut">Anthropic</span>. <span class="bib-title">Responsible Scaling Policy.</span><span class="bib-journal">anthropic.com/rsp — 2023.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[13]</span><div class="bib-t"><span class="bib-aut">Thompson, B., Roose, K.</span> (2024). <span class="bib-title">Dario Amodei on Claude and the Future of AI Safety.</span><span class="bib-journal">Hard Fork Podcast, The New York Times — Épisode 82.</span></div></div>
+    <div class="bib-item"><span class="bib-n">[14]</span><div class="bib-t"><span class="bib-aut">Amodei, D.</span> (2023). <span class="bib-title">Core Views on AI Safety: When, Why, What, and How.</span><span class="bib-journal">anthropic.com/news/core-views-on-ai-safety.</span></div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// DONNÉES FRISE EXACTES
+const TL_D=[
+  {y:"2021",t:"Fondation d'Anthropic",o:"Genèse — 2021",b:"Onze ex-chercheurs d'OpenAI, dont Dario et Daniela Amodei, fondent Anthropic à San Francisco. La décision fait suite à un désaccord profond sur la gouvernance d'OpenAI et son rapprochement avec Microsoft. La mission déclarée : développer des IA « sûres, bénéfiques et compréhensibles ».",s:"Sources — [6, 9, 34, 50]"},
+  {y:"Déc. 2022",t:"Constitutional AI Paper",o:"Rupture intellectuelle — Déc. 2022",b:"Publication de « Constitutional AI: Harmlessness from AI Feedback » (Bai et al., 2022). Ce travail décrit un mécanisme d'auto-correction par principes éthiques qui deviendra la signature technique d'Anthropic, distinct du RLHF dominant chez ses concurrents.",s:"Sources — [1, 14, 15, 16, 17]"},
+  {y:"Mars 2023",t:"Claude 1.0 lancé",o:"Lancement commercial — Mars 2023",b:"Première mise à disposition publique d'un modèle Anthropic, via API et interface web. Claude 1.0 se positionne sur la sécurité et la réduction des hallucinations, avec une fenêtre de contexte de 9 000 tokens. Anthropic dépasse rapidement 100 millions de revenus annuels récurrents.",s:"Sources — [54, 77]"},
+  {y:"Nov. 2023",t:"Partenariat Amazon",o:"Pivot industriel — Automne 2023",b:"Amazon annonce un engagement initial de 1,25 milliard (septembre 2023), porté à 4 milliards en novembre. L'accord prévoit qu'Anthropic utilise AWS comme cloud principal avec les puces Trainium et Inferentia d'Amazon. Un second engagement de 4 milliards suivra en 2024.",s:"Sources — [21, 58, 59, 91]"},
+  {y:"Mars 2024",t:"Famille Claude 3",o:"Compétition frontier — Mars 2024",b:"Lancement simultané de trois modèles : Haiku (vitesse), Sonnet (équilibre), Opus (performance maximale). Opus surpasse GPT-4 Turbo sur MMLU (86,8 %) et GPQA (50,4 %), établissant Anthropic comme concurrent de premier plan sur les tâches d'expertise professionnelle.",s:"Sources — [54, 55, 65]"},
+  {y:"2025",t:"Expansion dans les Émirats",o:"Géopolitique — 2025",b:"Anthropic annonce la création d'un hub d'IA à Abu Dhabi et des partenariats stratégiques dans le Golfe Persique. Ces projets révèlent la dépendance de la mission d'alignement à une infrastructure énergivore et géopolitiquement complexe.",s:"Sources — [58, 59, 60, 108]"},
+  {y:"2026",t:"Claude 4.6 — Intelligence agentique",o:"Ère agentique — 2026",b:"La famille Claude 4 (Sonnet 4.6, Opus 4.6) ancre Anthropic dans l'IA agentique : outils, mémoire persistante et pipelines multi-agents comme capacités natives. L'adaptive thinking permet une allocation dynamique du budget computationnel.",s:"Sources — Anthropic Model Hub, 2026"}
+];
+
+// INIT FRISE
+function initTimeline() {
+    const container = document.getElementById('tl-scroll-area');
+    TL_D.forEach((item, i) => {
+        const node = document.createElement('div');
+        node.className = 'tl-node';
+        node.onclick = () => setTL(i, node);
+        node.innerHTML = `<div class="tl-yr">${item.y}</div><div class="tl-lbl">${item.t}</div>`;
+        container.appendChild(node);
+    });
+}
+
+// NAVIGATION
+function show(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// PHASES HISTOIRE
+function setPhase(i,item){
+  document.querySelectorAll('.ps-item').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.pc-block').forEach(p=>p.classList.remove('active'));
+  item.classList.add('active');
+  document.getElementById('ph'+i).classList.add('active');
+}
+
+// ACCORDÉON ACTEURS (Corrigé)
+function toggleActor(card){
+  const isOpen = card.classList.contains('open');
+  
+  // Fermer toutes les cartes
+  document.querySelectorAll('.acard').forEach(c => {
+     c.classList.remove('open');
+     const btn = c.querySelector('.ac-toggle');
+     if(btn) btn.textContent = 'Parcours ↓';
+     if(c.querySelector('.ac-name').textContent.includes('Amazon')) {
+         if(btn) btn.textContent = 'Détails ↓';
+     }
+  });
+
+  // Si la carte cliquée n'était pas ouverte, l'ouvrir
+  if(!isOpen) {
+     card.classList.add('open');
+     const btn = card.querySelector('.ac-toggle');
+     if(btn) btn.textContent = 'Réduire ↑';
+  }
+}
+
+// UPDATE FRISE
+function setTL(i,node){
+  document.querySelectorAll('.tl-node').forEach(n=>n.classList.remove('active'));
+  node.classList.add('active');
+  const d=TL_D[i];
+  document.getElementById('tl-over').textContent=d.o;
+  document.getElementById('tl-title').textContent=d.t;
+  document.getElementById('tl-body').textContent=d.b;
+  document.getElementById('tl-src').textContent=d.s;
+  document.getElementById('tl-panel').classList.add('vis');
+}
+
+window.onload = initTimeline;
+</script>
+
+</body>
+</html>
